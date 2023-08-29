@@ -4,31 +4,33 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private Enemy _enemyPrefab;
-    [SerializeField] private List<Transform> _targets = new List<Transform>();
+    [SerializeField] private Enemy _prefab;
+    [SerializeField] private Transform _target;
+    [SerializeField] private float secondsRespawn;
 
-    private List<Transform> _spawnPoints = new List<Transform>();
+    private List<Transform> _spawnPoints;
 
     private void Awake()
     {
+        _spawnPoints = new List<Transform>(transform.childCount);
+
         foreach (Transform spawPoint in transform)
             _spawnPoints.Add(spawPoint);
     }
 
     private void Start()
     {
-        StartCoroutine(SpawnEnemy());
+        StartCoroutine(SpawnEnemies());
     }
 
-    private IEnumerator SpawnEnemy()
+    private IEnumerator SpawnEnemies()
     {
-        float secondsRespawn = 2f;
         var timeRespawn = new WaitForSeconds(secondsRespawn);
 
         for (int i = 0; i < _spawnPoints.Count; i++)
         {
-            Enemy newEnemy = Instantiate(_enemyPrefab, _spawnPoints[i].position, Quaternion.identity);
-            newEnemy.SetTarget(_targets);
+            Enemy newEnemy = Instantiate(_prefab, _spawnPoints[i].position, Quaternion.identity);
+            newEnemy.SetTarget(_target);
 
             yield return timeRespawn;
         }

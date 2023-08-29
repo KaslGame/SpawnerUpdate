@@ -7,29 +7,22 @@ public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed;
 
-    private List<Transform> _targets;
+    private Transform _target;
     private float _stopDistance = 1.5f;
-    private int _currentTargetIndex = 0;
 
     private void Update()
     {
-        if (_targets.Count != 0)
-            Move();
+        Move();
     }
 
-    public void SetTarget(List<Transform> targets)
+    public void SetTarget(Transform targets)
     {
-        _targets = targets;
+        _target = targets;
     }
 
     private void Move()
     {
-        if (_targets.Count - 1 >= _currentTargetIndex)
-        {
-            if (Vector2.Distance(transform.position, _targets[_currentTargetIndex].position) > _stopDistance)
-                transform.position = Vector2.MoveTowards(transform.position, _targets[_currentTargetIndex].position, _speed * Time.deltaTime);
-            else
-                _currentTargetIndex++;
-        }
+        if (Vector2.Distance(transform.position, _target.position) > _stopDistance)
+            transform.position = Vector2.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
     }
 }
